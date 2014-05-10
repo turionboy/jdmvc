@@ -173,7 +173,7 @@ public  class BaseCoreMvcServiceImpl implements IBaseCoreMvcService{
 		return MvcPageUtil.getUrlParamByKey(urlParam);
 	}
 
-	@Override
+	
 	public Object methodInvoke(RouteInfo routeInfo, boolean isSupportSpring)
 			throws Exception {
 		// TODO Auto-generated method stub

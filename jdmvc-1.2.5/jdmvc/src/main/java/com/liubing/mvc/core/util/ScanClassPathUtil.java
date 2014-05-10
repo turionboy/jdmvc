@@ -13,10 +13,6 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.liubing.mvc.core.exception.IOEError;
 import com.liubing.mvc.core.exception.SysError;
 import com.liubing.mvc.core.exception.SystemException;
@@ -27,8 +23,6 @@ import com.liubing.mvc.core.exception.SystemException;
  */
 public class ScanClassPathUtil{
 	
-	//private static final Logger logger = Logger.getLogger(ScanClassPathUtil.class);
-	private static final Logger logger=LoggerFactory.getLogger(ScanClassPathUtil.class); 
 	/**
 	 * 是否排除内部类 true->是 false->否
 	 */
@@ -146,13 +140,11 @@ public class ScanClassPathUtil{
 					try{
 						classes.add(Thread.currentThread().getContextClassLoader().loadClass(className));
 					}catch(ClassNotFoundException e){
-						logger.error("Class.forName error:",e);
 						throw SystemException.unchecked(e, SysError.ClassNotFound_ERROR);
 					}
 				}
 			}
 		}catch(IOException e){
-			logger.error("IOException error:",e);
 			throw SystemException.unchecked(e, IOEError.IOE_ERROR);
 
 		}

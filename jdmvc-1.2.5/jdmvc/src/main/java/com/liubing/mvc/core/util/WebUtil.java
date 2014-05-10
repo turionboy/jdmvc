@@ -3,11 +3,9 @@ package com.liubing.mvc.core.util;
 import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.log4j.Logger;
 
 public class WebUtil {
 
-    private static final Logger logger = Logger.getLogger(WebUtil.class);
 
     // 将数据以纯文本格式写入响应中
     public static void writeText(HttpServletResponse response, Object data) {
@@ -20,7 +18,6 @@ public class WebUtil {
             PrintWriter writer = response.getWriter();
             writer.write(data + ""); // 转为字符串
         } catch (Exception e) {
-            logger.error("在响应中写数据出错！", e);
             throw new RuntimeException(e);
         }
     }
@@ -46,7 +43,6 @@ public class WebUtil {
         try {
             request.getRequestDispatcher(path).forward(request, response);
         } catch (Exception e) {
-            logger.error("转发请求出错！", e);
             throw new RuntimeException(e);
         }
     }
@@ -56,7 +52,6 @@ public class WebUtil {
         try {
             response.sendRedirect(path);
         } catch (Exception e) {
-            logger.error("重定向请求出错！", e);
             throw new RuntimeException(e);
         }
     }
@@ -66,7 +61,6 @@ public class WebUtil {
         try {
             response.sendError(code, message);
         } catch (Exception e) {
-            logger.error("发送错误代码出错！", e);
             throw new RuntimeException(e);
         }
     }

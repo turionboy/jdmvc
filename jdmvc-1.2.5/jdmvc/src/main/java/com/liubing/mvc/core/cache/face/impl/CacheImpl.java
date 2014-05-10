@@ -25,7 +25,6 @@ public class CacheImpl<KEY, VALUE> implements ICache<KEY,VALUE> {
         this.limit = limit;
     }
 
-    @Override
     public void put ( KEY key, VALUE value ) {
         VALUE oldValue = map.put ( key, value );
         if ( oldValue != null ) {
@@ -39,7 +38,6 @@ public class CacheImpl<KEY, VALUE> implements ICache<KEY,VALUE> {
     }
 
 
-    @Override
     public VALUE get ( KEY key ) {
         removeThenAddKey ( key );
         return map.get ( key );
@@ -89,18 +87,15 @@ public class CacheImpl<KEY, VALUE> implements ICache<KEY,VALUE> {
     }
 
 
-    @Override
     public VALUE getSilent ( KEY key ) {
         return map.get ( key );
     }
 
-    @Override
     public void remove ( KEY key ) {
         removeFirstOccurrence ( key );
         map.remove ( key );
     }
 
-    @Override
     public int size () {
         return map.size ();
     }

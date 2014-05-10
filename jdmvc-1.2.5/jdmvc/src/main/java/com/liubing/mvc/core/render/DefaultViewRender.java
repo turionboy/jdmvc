@@ -27,7 +27,6 @@ public class DefaultViewRender implements ViewRender {
 	/* (non-Javadoc)
 	 * @see com.jd.mvc.core.render.ViewRender#renderPage(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.String)
 	 */
-	@Override
 	public void renderPage(HttpServletRequest request,
 			HttpServletResponse response, String view) throws Exception {
 		// TODO Auto-generated method stub
@@ -37,7 +36,6 @@ public class DefaultViewRender implements ViewRender {
 	/* (non-Javadoc)
 	 * @see com.jd.mvc.core.render.ViewRender#renderResult(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.String)
 	 */
-	@Override
 	public void renderResult(HttpServletRequest request,
 			HttpServletResponse response, Object result,String returnType) throws Exception {
 		
@@ -63,7 +61,6 @@ public class DefaultViewRender implements ViewRender {
 	/* (non-Javadoc)
 	 * @see com.jd.mvc.core.render.ViewRender#init()
 	 */
-	@Override
 	public void init(ServletContext servletContext) {
 		// TODO Auto-generated method stub
 		

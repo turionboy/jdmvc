@@ -17,13 +17,14 @@
     <dependency>
 			<groupId>com.jd</groupId>
 			<artifactId>jdmvc</artifactId>
-			<version>1.2.4</version>
+			<version>1.2.5</version>
 	</dependency>
 	<dependency>
-		  <groupId>com.alibaba</groupId>
-		  <artifactId>fastjson</artifactId>
-	      <version>1.1.39</version>
-    </dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring</artifactId>
+			<version>2.5.6</version>
+			<scope>provided</scope>
+	</dependency>
     <dependency>
 			<groupId>org.apache.velocity</groupId>
 			<artifactId>velocity</artifactId>
