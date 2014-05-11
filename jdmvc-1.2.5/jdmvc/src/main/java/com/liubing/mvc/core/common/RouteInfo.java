@@ -3,10 +3,13 @@ package com.liubing.mvc.core.common;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Map;
-
-
+/**
+ * 路由的封装
+ * @author Administrator
+ *
+ */
 @SuppressWarnings("serial")
-public class RouteInfo implements Serializable{
+public class RouteInfo implements Serializable {
 	private String route;
 	private int routeLength;
 	private String clazz;
@@ -17,8 +20,9 @@ public class RouteInfo implements Serializable{
 	private Class<?> interceptor;
 	private Method[] methods;
 	private String returnType;
-	public RouteInfo(){
-		
+
+	public RouteInfo() {
+
 	}
 
 	public String getRoute() {
@@ -101,10 +105,11 @@ public class RouteInfo implements Serializable{
 	}
 
 	/**
-	 * @param returnType the returnType to set
+	 * @param returnType
+	 *            the returnType to set
 	 */
 	public void setReturnType(String returnType) {
 		this.returnType = returnType;
 	}
-	
+
 }

@@ -1,7 +1,5 @@
 package com.liubing.mvc.core.util;
 
-
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,7 +9,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -27,7 +24,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -43,28 +39,31 @@ import com.liubing.mvc.core.exception.ConversionError;
 import com.liubing.mvc.core.exception.IOEError;
 import com.liubing.mvc.core.exception.SysError;
 import com.liubing.mvc.core.exception.SystemException;
-import com.liubing.mvc.core.exception.UnknownError;
-import com.liubing.mvc.core.exception.UploadFileExceptionError;
+
 /**
  * MVC 框架工具类
+ * 
  * @author Administrator
- *
+ * 
  */
-public class MvcPageUtil{
+public class MvcPageUtil {
 	/**
 	 * 
-	 * <br/>Description:根据key取出Map里对应的value
+	 * <br/>
+	 * Description:根据key取出Map里对应的value
 	 * 
 	 * 
 	 * @param maps
 	 * @param key
 	 * @return
 	 */
-	public static String getMapValue(List<ConcurrentHashMap<String,String>> maps,String key){
+	public static String getMapValue(
+			List<ConcurrentHashMap<String, String>> maps, String key) {
 		String val = null;
-		for(Map<String,String> m:maps){
+		for (Map<String, String> m : maps) {
 			String v = m.get(key);
-			if(null != v && ! "".equalsIgnoreCase(v) && ! "null".equalsIgnoreCase(v)){
+			if (null != v && !"".equalsIgnoreCase(v)
+					&& !"null".equalsIgnoreCase(v)) {
 				val = v;
 				break;
 			}
@@ -74,20 +73,24 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:返回当前Request请求IP
+	 * <br/>
+	 * Description:返回当前Request请求IP
 	 * 
 	 * @param req
 	 * @return
 	 */
-	public static String getRealIp(HttpServletRequest req){
+	public static String getRealIp(HttpServletRequest req) {
 		String lastLoginIP = req.getHeader("x-forwarded-for");
-		if(lastLoginIP == null || lastLoginIP.length() == 0 || "unknown".equalsIgnoreCase(lastLoginIP)){
+		if (lastLoginIP == null || lastLoginIP.length() == 0
+				|| "unknown".equalsIgnoreCase(lastLoginIP)) {
 			lastLoginIP = req.getHeader("Proxy-Client-IP");
 		}
-		if(lastLoginIP == null || lastLoginIP.length() == 0 || "unknown".equalsIgnoreCase(lastLoginIP)){
+		if (lastLoginIP == null || lastLoginIP.length() == 0
+				|| "unknown".equalsIgnoreCase(lastLoginIP)) {
 			lastLoginIP = req.getHeader("WL-Proxy-Client-IP");
 		}
-		if(lastLoginIP == null || lastLoginIP.length() == 0 || "unknown".equalsIgnoreCase(lastLoginIP)){
+		if (lastLoginIP == null || lastLoginIP.length() == 0
+				|| "unknown".equalsIgnoreCase(lastLoginIP)) {
 			lastLoginIP = req.getRemoteAddr();
 		}
 		return lastLoginIP;
@@ -95,55 +98,61 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:生成UUID
+	 * <br/>
+	 * Description:生成UUID
 	 * 
 	 * @return
 	 */
-	public static String generateUUID(){
-		String uuid = UUID.randomUUID().toString().replace("-","").toUpperCase();
+	public static String generateUUID() {
+		String uuid = UUID.randomUUID().toString().replace("-", "")
+				.toUpperCase();
 		return uuid;
 	}
 
 	/**
 	 * 
-	 * <br/>Description:根据当前时间返一个long字符串
-	 
+	 * <br/>
+	 * Description:根据当前时间返一个long字符串
+	 * 
 	 * 
 	 * @return
 	 */
-	public static Long generateLong(){
+	public static Long generateLong() {
 		Long l = new Date().getTime();
 		return l;
 	}
 
 	/**
 	 * 
-	 * <br/>Description:返回 HttpSession
+	 * <br/>
+	 * Description:返回 HttpSession
 	 * 
 	 * @param request
 	 * @return
 	 */
-	public static HttpSession getSession(HttpServletRequest request){
+	public static HttpSession getSession(HttpServletRequest request) {
 		HttpSession session = request.getSession(true);
 		return session;
 	}
 
 	/**
 	 * 
-	 * <br/>Description:将一个对象放入Session
+	 * <br/>
+	 * Description:将一个对象放入Session
 	 * 
 	 * @param sessionName
 	 * @param obj
 	 * @param request
 	 * @return
 	 */
-	public static boolean addSession(String sessionName,Object obj,HttpServletRequest request){
+	public static boolean addSession(String sessionName, Object obj,
+			HttpServletRequest request) {
 		boolean boo = false;
-		try{
+		try {
 			HttpSession session = getSession(request);
-			session.setAttribute(sessionName,obj);
+			session.setAttribute(sessionName, obj);
 			boo = true;
-		}catch(Exception e){
+		} catch (Exception e) {
 			boo = false;
 		}
 
@@ -152,17 +161,21 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:设置P3P，以完成跨域请求
+	 * <br/>
+	 * Description:设置P3P，以完成跨域请求
 	 * 
 	 * @param response
 	 */
-	public static void setResponseHeaderP3P(HttpServletResponse response){
-		response.setHeader("P3P","CP=\"CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR\"");
+	public static void setResponseHeaderP3P(HttpServletResponse response) {
+		response.setHeader(
+				"P3P",
+				"CP=\"CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR\"");
 	}
 
 	/**
 	 * 
-	 * <br/>Description:添加 Cookie
+	 * <br/>
+	 * Description:添加 Cookie
 	 * 
 	 * @param response
 	 * @param name
@@ -170,16 +183,17 @@ public class MvcPageUtil{
 	 * @param maxAge
 	 * @param path
 	 */
-	public static void addCookie(HttpServletResponse response,String name,String value,Integer maxAge,String path){
-		Cookie cookie = new Cookie(name,value);
+	public static void addCookie(HttpServletResponse response, String name,
+			String value, Integer maxAge, String path) {
+		Cookie cookie = new Cookie(name, value);
 
-		if( ! (null == path) || ! "".equalsIgnoreCase(path)){
+		if (!(null == path) || !"".equalsIgnoreCase(path)) {
 			cookie.setPath(path);
-		}else{
+		} else {
 			cookie.setPath("/");
 		}
 
-		if(null != maxAge){
+		if (null != maxAge) {
 			cookie.setMaxAge(maxAge.intValue() * 60); // 单位为秒所以* 60 以便按分钟设值
 		}
 
@@ -188,16 +202,17 @@ public class MvcPageUtil{
 		response.addCookie(cookie);
 	}
 
-	public static void addHttpsCookie(HttpServletResponse response,String name,String value,Integer maxAge,String path){
-		Cookie cookie = new Cookie(name,value);
+	public static void addHttpsCookie(HttpServletResponse response,
+			String name, String value, Integer maxAge, String path) {
+		Cookie cookie = new Cookie(name, value);
 
-		if( ! (null == path) || ! "".equalsIgnoreCase(path)){
+		if (!(null == path) || !"".equalsIgnoreCase(path)) {
 			cookie.setPath(path);
-		}else{
+		} else {
 			cookie.setPath("/");
 		}
 
-		if(null != maxAge){
+		if (null != maxAge) {
 			cookie.setMaxAge(maxAge.intValue() * 60); // 单位为秒所以* 60 以便按分钟设值
 		}
 
@@ -206,72 +221,79 @@ public class MvcPageUtil{
 		response.addCookie(cookie);
 	}
 
-	public static void addCookie(HttpServletResponse response,String name,String value){
-		Cookie cookie = new Cookie(name,value);
+	public static void addCookie(HttpServletResponse response, String name,
+			String value) {
+		Cookie cookie = new Cookie(name, value);
 
 		cookie.setPath("/");
 
-		cookie.setMaxAge( - 1);
+		cookie.setMaxAge(-1);
 
 		response.addCookie(cookie);
 	}
 
 	/**
 	 * 
-	 * <br/>Description:添加 SSO Cookie maxAge为两周
+	 * <br/>
+	 * Description:添加 SSO Cookie maxAge为两周
 	 * 
 	 * @param response
 	 * @param cookieMsg
 	 */
-	public static void addSSOInfo(HttpServletResponse response,String cookieMsg){
+	public static void addSSOInfo(HttpServletResponse response, String cookieMsg) {
 		setResponseHeaderP3P(response);
-		addCookie(response,"_ticket",cookieMsg,60 * 60 * 24 * 14,"/");
+		addCookie(response, "_ticket", cookieMsg, 60 * 60 * 24 * 14, "/");
 	}
 
 	/**
 	 * 
-	 * <br/>Description:添加 SSO Cookie 并指定时间
+	 * <br/>
+	 * Description:添加 SSO Cookie 并指定时间
 	 * 
 	 * @param response
 	 * @param cookieMsg
 	 * @param cookieMaxAge
 	 */
-	public static void addSSOInfo(HttpServletResponse response,String cookieMsg,Integer cookieMaxAge){
+	public static void addSSOInfo(HttpServletResponse response,
+			String cookieMsg, Integer cookieMaxAge) {
 		setResponseHeaderP3P(response);
-		addCookie(response,"_ticket",cookieMsg,cookieMaxAge,"/");
+		addCookie(response, "_ticket", cookieMsg, cookieMaxAge, "/");
 	}
 
 	/**
 	 * 
-	 * <br/>Description:根据名字获取cookie
+	 * <br/>
+	 * Description:根据名字获取cookie
 	 * 
 	 * @param request
 	 * @param cookieName
 	 * @return
 	 */
-	public static Cookie getCookieByName(HttpServletRequest request,String cookieName){
-		Map<String,Cookie> cookieMap = getCookieMap(request);
-		if(cookieMap.containsKey(cookieName)){
+	public static Cookie getCookieByName(HttpServletRequest request,
+			String cookieName) {
+		Map<String, Cookie> cookieMap = getCookieMap(request);
+		if (cookieMap.containsKey(cookieName)) {
 			Cookie cookie = (Cookie) cookieMap.get(cookieName);
 			return cookie;
-		}else{
+		} else {
 			return null;
 		}
 	}
 
 	/**
 	 * 
-	 * <br/>Description:将cookie封装到Map里面并返回
+	 * <br/>
+	 * Description:将cookie封装到Map里面并返回
 	 * 
 	 * @param request
 	 * @return
 	 */
-	public static Map<String,Cookie> getCookieMap(HttpServletRequest request){
-		Map<String,Cookie> cookieMap = new HashMap<String,Cookie>();
+	public static Map<String, Cookie> getCookieMap(HttpServletRequest request) {
+		Map<String, Cookie> cookieMap = new HashMap<String, Cookie>();
 		Cookie[] cookies = getCooikes(request);
-		if(null != cookies){
-			for(Cookie cookie:cookies){
-				cookieMap.put(cookie.getName(),cookie);
+		if (null != cookies) {
+			for (Cookie cookie : cookies) {
+				cookieMap.put(cookie.getName(), cookie);
 			}
 		}
 		return cookieMap;
@@ -279,29 +301,32 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:返回Cookie集合
+	 * <br/>
+	 * Description:返回Cookie集合
 	 * 
 	 * @param request
 	 * @return
 	 */
-	public static Cookie[] getCooikes(HttpServletRequest request){
+	public static Cookie[] getCooikes(HttpServletRequest request) {
 		return request.getCookies();
 	}
 
 	/**
 	 * 
-	 * <br/>Description:更新Cookie值
+	 * <br/>
+	 * Description:更新Cookie值
 	 * 
 	 * @param request
 	 * @param response
 	 * @param cookieName
 	 * @param cookieValue
 	 */
-	public static void updateCookie(HttpServletRequest request,HttpServletResponse response,String cookieName,String cookieValue){
+	public static void updateCookie(HttpServletRequest request,
+			HttpServletResponse response, String cookieName, String cookieValue) {
 		Cookie[] cookies = getCooikes(request);
-		if(cookies.length > 1){
-			for(int i = 0;i < cookies.length;i ++ ){
-				if(cookies[i].getName().equalsIgnoreCase(cookieName)){
+		if (cookies.length > 1) {
+			for (int i = 0; i < cookies.length; i++) {
+				if (cookies[i].getName().equalsIgnoreCase(cookieName)) {
 					cookies[i].setValue(cookieValue);
 					response.addCookie(cookies[i]);
 					break;
@@ -312,22 +337,25 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:删除指定Cookie
-	 
+	 * <br/>
+	 * Description:删除指定Cookie
+	 * 
 	 * 
 	 * @param response
 	 * @param cookieName
 	 * @param path
 	 * @param domain
 	 */
-	public static void deleteCookie(HttpServletResponse response,String cookieName,String path,String domain){
-		addCookie(response,cookieName,"",0,path);
+	public static void deleteCookie(HttpServletResponse response,
+			String cookieName, String path, String domain) {
+		addCookie(response, cookieName, "", 0, path);
 		// ProjectTools.addCookie(response,cookieName,"",0,path,domain);
 	}
 
 	/**
 	 * 
-	 * <br/>Description:页面跳转
+	 * <br/>
+	 * Description:页面跳转
 	 * 
 	 * @param request
 	 * @param response
@@ -336,95 +364,104 @@ public class MvcPageUtil{
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	public static void redirectPage(HttpServletRequest request,HttpServletResponse response,String path,boolean isRequestDispatcher) throws IOException,ServletException{
-		if(isRequestDispatcher){
-			request.getRequestDispatcher(path).forward(request,response);
+	public static void redirectPage(HttpServletRequest request,
+			HttpServletResponse response, String path,
+			boolean isRequestDispatcher) throws IOException, ServletException {
+		if (isRequestDispatcher) {
+			request.getRequestDispatcher(path).forward(request, response);
 			// RequestDispatcher rd= request.getRequestDispatcher(path);
-		}else{
+		} else {
 			response.sendRedirect(path);
 		}
 	}
 
 	/**
 	 * 
-	 * <br/>Description:返回JSON结果
-	 
+	 * <br/>
+	 * Description:返回JSON结果
+	 * 
 	 * 
 	 * @param response
 	 * @param str
 	 */
-	public static void resultJsonToString(HttpServletResponse response,String str){
-		try{
-			
-			response.setHeader("Pragma","No-cache");
-			response.setHeader("Cache-Control","no-cache");
-			response.setDateHeader("Expires", - 1);
+	public static void resultJsonToString(HttpServletResponse response,
+			String str) {
+		try {
+
+			response.setHeader("Pragma", "No-cache");
+			response.setHeader("Cache-Control", "no-cache");
+			response.setDateHeader("Expires", -1);
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application/x-json; charset=UTF-8");
 			PrintWriter out = response.getWriter();
 			out.println(str);
 			out.close();
-		}catch(IOException e){
+		} catch (IOException e) {
 			throw SystemException.unchecked(e, IOEError.IOE_ERROR);
-			//logger.error("返回JSON结果失败。");
-			//System.out.println();
+			// logger.error("返回JSON结果失败。");
+			// System.out.println();
 		}
 	}
 
 	/**
 	 * 
-	 * <br/>Description:返回JSON结果
-	 
+	 * <br/>
+	 * Description:返回JSON结果
+	 * 
 	 * 
 	 * @param response
 	 * @param str
 	 */
-	public static void resultHTMLToString(HttpServletResponse response,String str){
-		try{
+	public static void resultHTMLToString(HttpServletResponse response,
+			String str) {
+		try {
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("text/plain");
 			response.setContentType("text/html; charset=UTF-8");
 			PrintWriter out = response.getWriter();
 			out.println(str);
 			out.close();
-		}catch(IOException e){
+		} catch (IOException e) {
 			throw SystemException.unchecked(e, IOEError.IOE_ERROR);
-			//System.out.println("返回HTML结果失败。");
+			// System.out.println("返回HTML结果失败。");
 		}
 	}
 
 	/**
 	 * 
-	 * <br/>Description:返回XML结果
-	 
+	 * <br/>
+	 * Description:返回XML结果
+	 * 
 	 * 
 	 * @param response
 	 * @param str
 	 */
-	public static void resultXMLToString(HttpServletResponse response,String str){
-		try{
+	public static void resultXMLToString(HttpServletResponse response,
+			String str) {
+		try {
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("text/plain");
 			response.setContentType("text/xml; charset=UTF-8");
 			PrintWriter out = response.getWriter();
 			out.println(str);
 			out.close();
-		}catch(IOException e){
+		} catch (IOException e) {
 			throw SystemException.unchecked(e, IOEError.IOE_ERROR);
-			//System.out.println("返回HTML结果失败。");
+			// System.out.println("返回HTML结果失败。");
 		}
 	}
 
 	/**
 	 * 
-	 * <br/>Description:返回DataGrid数据
-	 
+	 * <br/>
+	 * Description:返回DataGrid数据
+	 * 
 	 * 
 	 * @param total
 	 * @param jsonArrayRows
 	 * @return
 	 */
-	public static String toJQeryEasyUIDataGrid(int total,String jsonArrayRows){
+	public static String toJQeryEasyUIDataGrid(int total, String jsonArrayRows) {
 		StringBuffer sb = new StringBuffer();
 
 		sb.append("{").append("\"").append("total").append("\"").append(":");
@@ -438,108 +475,118 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:将字符串进行URLEncoder编码
-	 
+	 * <br/>
+	 * Description:将字符串进行URLEncoder编码
+	 * 
 	 * 
 	 * @param str
 	 * @return
 	 */
-	public static String urlEncode(String str){
+	public static String urlEncode(String str) {
 		String encodeStr = null;
-		try{
-			encodeStr = URLEncoder.encode(str,"UTF-8");
-		}catch(UnsupportedEncodingException e){
-			throw SystemException.unchecked(e, SysError.UnsupportedEncoding_ERROR);
+		try {
+			encodeStr = URLEncoder.encode(str, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw SystemException.unchecked(e,
+					SysError.UnsupportedEncoding_ERROR);
 		}
 		return encodeStr;
 	}
 
 	/**
 	 * 
-	 * <br/>Description:将字符串进行URLDecoder解码
-	 
+	 * <br/>
+	 * Description:将字符串进行URLDecoder解码
+	 * 
 	 * 
 	 * @param str
 	 * @return
 	 */
-	public static String urlDecoder(String str){
+	public static String urlDecoder(String str) {
 		String decoderStr = null;
-		try{
-			decoderStr = URLDecoder.decode(str,"UTF-8");
-		}catch(UnsupportedEncodingException e){
-			throw SystemException.unchecked(e, SysError.UnsupportedEncoding_ERROR);
+		try {
+			decoderStr = URLDecoder.decode(str, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw SystemException.unchecked(e,
+					SysError.UnsupportedEncoding_ERROR);
 
-			//System.out.println("字符串解码失败。");
+			// System.out.println("字符串解码失败。");
 		}
 		return decoderStr;
 	}
 
 	/**
 	 * 
-	 * <br/>Description:将字符串进行URLDecoder解码并转换成UTF-8编码
-	 
+	 * <br/>
+	 * Description:将字符串进行URLDecoder解码并转换成UTF-8编码
+	 * 
 	 * 
 	 * @param str
 	 * @return
 	 */
-	public static String urlDecoder(String str,String charset){
+	public static String urlDecoder(String str, String charset) {
 		String decoderStr = null;
-		try{
-			decoderStr = new String(URLDecoder.decode(str,charset).getBytes("ISO-8859-1"),charset);
-		}catch(UnsupportedEncodingException e){
-			throw SystemException.unchecked(e, SysError.UnsupportedEncoding_ERROR);
-			//System.out.println("字符串解码失败。");
+		try {
+			decoderStr = new String(URLDecoder.decode(str, charset).getBytes(
+					"ISO-8859-1"), charset);
+		} catch (UnsupportedEncodingException e) {
+			throw SystemException.unchecked(e,
+					SysError.UnsupportedEncoding_ERROR);
+			// System.out.println("字符串解码失败。");
 		}
 		return decoderStr;
 	}
 
 	/**
 	 * 
-	 * <br/>Description:读取一个文本文件
-	 
+	 * <br/>
+	 * Description:读取一个文本文件
+	 * 
 	 * 
 	 * @param filePath
 	 * @return
 	 * @throws IOException
 	 */
-	public static String getFile(String filePath) throws IOException{
-		try{
+	public static String getFile(String filePath) throws IOException {
+		try {
 			StringBuffer sb = new StringBuffer();
-			if(isEmptyFile(filePath)){
+			if (isEmptyFile(filePath)) {
 				InputStream is = new FileInputStream(filePath);
 
 				String line;
 
-				BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(is));
 				line = reader.readLine();
-				while(line != null){
+				while (line != null) {
 					sb.append(line);
 					sb.append("\n");
 					line = reader.readLine();
 				}
 				is.close();
-			}else{
+			} else {
 				sb.append("无法获取文件！").append("\n").append("Can not get file!");
 			}
 			return sb.toString();
-		}catch(IOException e){
+		} catch (IOException e) {
 			throw SystemException.unchecked(e, IOEError.IOE_ERROR);
 		}
 	}
 
 	/**
 	 * 
-	 * <br/>Description:重命名文件
-	 
+	 * <br/>
+	 * Description:重命名文件
+	 * 
 	 * 
 	 * @param filePath
 	 * @param newFileName
 	 */
-	public static void renameFile(String filePath,String newFileName){
+	public static void renameFile(String filePath, String newFileName) {
 
 		int ll = filePath.lastIndexOf("/");
 
-		String strPath = filePath.substring(0,ll + 1);
+		String strPath = filePath.substring(0, ll + 1);
 		// String strFileName=filePath.substring(ll+1,filePath.length());
 
 		File oldFile = new File(filePath);
@@ -552,20 +599,22 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:自动按日期重命名文件
-	 
+	 * <br/>
+	 * Description:自动按日期重命名文件
+	 * 
 	 * 
 	 * @param filePath
 	 */
-	public static void renameFile(String filePath){
+	public static void renameFile(String filePath) {
 
 		int ll = filePath.lastIndexOf("/");
 
-		String strPath = filePath.substring(0,ll + 1);
-		String strFileName = filePath.substring(ll + 1,filePath.length());
+		String strPath = filePath.substring(0, ll + 1);
+		String strFileName = filePath.substring(ll + 1, filePath.length());
 
 		File oldFile = new File(filePath);
-		File newFile = new File(strPath + "/" + strFileName + "_bak_" + getCurrentDate("yyyyMMdd_HHmmss"));
+		File newFile = new File(strPath + "/" + strFileName + "_bak_"
+				+ getCurrentDate("yyyyMMdd_HHmmss"));
 
 		oldFile.renameTo(newFile);
 
@@ -574,16 +623,17 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:判断一个文件是否存在
-	 
+	 * <br/>
+	 * Description:判断一个文件是否存在
+	 * 
 	 * 
 	 * @param filePath
 	 * @return
 	 */
-	public static Boolean isEmptyFile(String filePath){
+	public static Boolean isEmptyFile(String filePath) {
 		File f = new File(filePath);
 		Boolean isEmptyFile = new Boolean(false);
-		if(f.exists()){
+		if (f.exists()) {
 			isEmptyFile = true;
 		}
 		return isEmptyFile;
@@ -591,16 +641,17 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:判断文件夹是否存在
-	 
+	 * <br/>
+	 * Description:判断文件夹是否存在
+	 * 
 	 * 
 	 * @param directoryPath
 	 * @return
 	 */
-	public static Boolean isDirectory(String directoryPath){
+	public static Boolean isDirectory(String directoryPath) {
 		File f = new File(directoryPath);
 		Boolean isDirectory = new Boolean(false);
-		if(f.isDirectory()){
+		if (f.isDirectory()) {
 			isDirectory = true;
 		}
 		return isDirectory;
@@ -608,12 +659,13 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:获取当前日期
-	 
+	 * <br/>
+	 * Description:获取当前日期
+	 * 
 	 * 
 	 * @return
 	 */
-	public static String getCurrentDate(){
+	public static String getCurrentDate() {
 		Date d = new Date();
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String str = date.format(d);
@@ -622,18 +674,20 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:返回国际化时间，含时区
-	 
+	 * <br/>
+	 * Description:返回国际化时间，含时区
+	 * 
 	 * 
 	 * @return
 	 */
-	public static String getCurrentInternationalizationDate(){
+	public static String getCurrentInternationalizationDate() {
 		String str = null;
-		try{
+		try {
 			Date d = new Date();
-			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+			SimpleDateFormat date = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ssZ");
 			str = date.format(d);
-		}catch(Exception e){
+		} catch (Exception e) {
 			System.out.println("转换日期异常！");
 		}
 		return str;
@@ -641,13 +695,14 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:获取当前日期,返回指定日期格式
-	 
+	 * <br/>
+	 * Description:获取当前日期,返回指定日期格式
+	 * 
 	 * 
 	 * @param dataFormat
 	 * @return
 	 */
-	public static String getCurrentDate(String dataFormat){
+	public static String getCurrentDate(String dataFormat) {
 		Date d = new Date();
 		SimpleDateFormat date = new SimpleDateFormat(dataFormat);
 		String str = date.format(d);
@@ -656,14 +711,15 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:根据格转式转换时间
-	 
+	 * <br/>
+	 * Description:根据格转式转换时间
+	 * 
 	 * 
 	 * @param date
 	 * @param dataFormat
 	 * @return
 	 */
-	public static String conversionDate(Date date,String dataFormat){
+	public static String conversionDate(Date date, String dataFormat) {
 		SimpleDateFormat d = new SimpleDateFormat(dataFormat);
 		String str = d.format(date);
 		return str;
@@ -671,20 +727,22 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:格式化日期时间，返回String类型
-	 
+	 * <br/>
+	 * Description:格式化日期时间，返回String类型
+	 * 
 	 * 
 	 * @param dateTime
 	 * @param dataFormat
 	 * @return
 	 */
-	public static String conversionDateReturnString(String dateTime,String dataFormat){
+	public static String conversionDateReturnString(String dateTime,
+			String dataFormat) {
 		SimpleDateFormat dateTemp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		SimpleDateFormat date = new SimpleDateFormat(dataFormat);
 		String str = null;
-		try{
+		try {
 			str = date.format(dateTemp.parse(dateTime));
-		}catch(ParseException e){
+		} catch (ParseException e) {
 			throw SystemException.unchecked(e, SysError.Parse_ERROR);
 		}
 
@@ -693,31 +751,35 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:long转Date
-	 
+	 * <br/>
+	 * Description:long转Date
+	 * 
 	 * 
 	 * @param longDate
 	 * @return
 	 */
-	public static Date longToDate(long longDate){
+	public static Date longToDate(long longDate) {
 		return new Date(longDate);
 	}
 
 	/**
 	 * 
-	 * <br/>Description:long转String
-	 
+	 * <br/>
+	 * Description:long转String
+	 * 
 	 * 
 	 * @param dateStr
 	 * @param dateFormat
 	 * @return
 	 */
-	public static String longToString(String dateStr,String dateFormat){
+	public static String longToString(String dateStr, String dateFormat) {
 		String str = null;
-		try{
-			str = conversionDate(longToDate(Long.parseLong(dateStr)),dateFormat);
-		}catch(Exception e){
-			throw SystemException.unchecked(e, ConversionError.Conversion_ERROR);
+		try {
+			str = conversionDate(longToDate(Long.parseLong(dateStr)),
+					dateFormat);
+		} catch (Exception e) {
+			throw SystemException
+					.unchecked(e, ConversionError.Conversion_ERROR);
 
 		}
 		return str;
@@ -725,30 +787,32 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:获取当前日期返回Date类型
-	 
+	 * <br/>
+	 * Description:获取当前日期返回Date类型
+	 * 
 	 * 
 	 * @return
 	 */
-	public static Date getCurrentDateReturnDate(){
+	public static Date getCurrentDateReturnDate() {
 		Date strDate = new Date();
 		return strDate;
 	}
 
 	/**
 	 * 
-	 * <br/>Description:格式化日期时间，返回Date类型
-	 
+	 * <br/>
+	 * Description:格式化日期时间，返回Date类型
+	 * 
 	 * 
 	 * @param dateTime
 	 * @return
 	 */
-	public static Date conversionDateReturnDate(String dateTime){
+	public static Date conversionDateReturnDate(String dateTime) {
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date strDate = null;
-		try{
+		try {
 			strDate = date.parse(dateTime);
-		}catch(ParseException e){
+		} catch (ParseException e) {
 			throw SystemException.unchecked(e, SysError.Parse_ERROR);
 		}
 		return strDate;
@@ -756,18 +820,19 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:格式化日期时间，返回Date类型(输入方式月日年时分秒)
-	 
+	 * <br/>
+	 * Description:格式化日期时间，返回Date类型(输入方式月日年时分秒)
+	 * 
 	 * 
 	 * @param dateTime
 	 * @return
 	 */
-	public static Date conversionDateReturnDateInput_Mdy(String dateTime){
+	public static Date conversionDateReturnDateInput_Mdy(String dateTime) {
 		SimpleDateFormat date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		Date strDate = null;
-		try{
+		try {
 			strDate = date.parse(dateTime);
-		}catch(ParseException e){
+		} catch (ParseException e) {
 			throw SystemException.unchecked(e, SysError.Parse_ERROR);
 		}
 		return strDate;
@@ -775,18 +840,21 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:转换国际化时间
-	 
+	 * <br/>
+	 * Description:转换国际化时间
 	 * 
-	 * @param dateTime 2010-06-01T20:00:00+08:00
+	 * 
+	 * @param dateTime
+	 *            2010-06-01T20:00:00+08:00
 	 * @return
 	 */
-	public static Date conversionDateToDateByInternationalization(String dateTime){
+	public static Date conversionDateToDateByInternationalization(
+			String dateTime) {
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 		Date strDate = null;
-		try{
+		try {
 			strDate = date.parse(dateTime);
-		}catch(ParseException e){
+		} catch (ParseException e) {
 			throw SystemException.unchecked(e, SysError.Parse_ERROR);
 		}
 		return strDate;
@@ -794,20 +862,25 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:转换国际化时间
-	 
+	 * <br/>
+	 * Description:转换国际化时间
 	 * 
-	 * @param dateTime 2010-06-01T20:00:00+08:00
-	 * @param dateFormat 日常日期格式 例如：yyyy-MM-dd'T'HH:mm:ss+hh:mm
+	 * 
+	 * @param dateTime
+	 *            2010-06-01T20:00:00+08:00
+	 * @param dateFormat
+	 *            日常日期格式 例如：yyyy-MM-dd'T'HH:mm:ss+hh:mm
 	 * @return
 	 */
-	public static String conversionDateToStringByInternationalization(String dateTime,String dateFormat){
-		SimpleDateFormat dateTemp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+	public static String conversionDateToStringByInternationalization(
+			String dateTime, String dateFormat) {
+		SimpleDateFormat dateTemp = new SimpleDateFormat(
+				"yyyy-MM-dd'T'HH:mm:ssZ");
 		SimpleDateFormat date = new SimpleDateFormat(dateFormat);
 		String str = null;
-		try{
+		try {
 			str = date.format(dateTemp.parse(dateTime));
-		}catch(ParseException e){
+		} catch (ParseException e) {
 			throw SystemException.unchecked(e, SysError.Parse_ERROR);
 		}
 		return str;
@@ -815,14 +888,15 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:计算未来几钟后的时间
-	 
+	 * <br/>
+	 * Description:计算未来几钟后的时间
+	 * 
 	 * 
 	 * @param minutes
 	 * @param outDataFormat
 	 * @return
 	 */
-	public static String generateFutureTime(int minutes,String outDataFormat){
+	public static String generateFutureTime(int minutes, String outDataFormat) {
 		String dateTime = null;
 		// SimpleDateFormat formatter = new
 		// SimpleDateFormat("yyyy-MM-dd  HH:mm:ss G E D F w W a E F");
@@ -836,15 +910,17 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:计算未来几钟后的时间
-	 
+	 * <br/>
+	 * Description:计算未来几钟后的时间
+	 * 
 	 * 
 	 * @param minutes
 	 * @param inputDateTime
 	 * @param outDataFormat
 	 * @return
 	 */
-	public static String generateFutureTime(int minutes,String inputDateTime,String outDataFormat){
+	public static String generateFutureTime(int minutes, String inputDateTime,
+			String outDataFormat) {
 		String dateTime = null;
 		SimpleDateFormat formatter = new SimpleDateFormat(outDataFormat);
 		Date date = conversionDateReturnDate(inputDateTime);
@@ -856,15 +932,17 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:计算未来几钟后的时间
-	 
+	 * <br/>
+	 * Description:计算未来几钟后的时间
+	 * 
 	 * 
 	 * @param minutes
 	 * @param inputDateTime
 	 * @param outDataFormat
 	 * @return
 	 */
-	public static String generateFutureTime(int minutes,Date inputDateTime,String outDataFormat){
+	public static String generateFutureTime(int minutes, Date inputDateTime,
+			String outDataFormat) {
 		String dateTime = null;
 		SimpleDateFormat formatter = new SimpleDateFormat(outDataFormat);
 		long Time = (inputDateTime.getTime() / 1000) + 60 * minutes;
@@ -875,18 +953,20 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:根据传入时间返回国际化时间，含时区
-	 
+	 * <br/>
+	 * Description:根据传入时间返回国际化时间，含时区
+	 * 
 	 * 
 	 * @param d
 	 * @return
 	 */
-	public static String getInternationalizationDate(Date d){
+	public static String getInternationalizationDate(Date d) {
 		String str = null;
-		try{
-			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+		try {
+			SimpleDateFormat date = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ssZ");
 			str = date.format(d);
-		}catch(Exception e){
+		} catch (Exception e) {
 			throw SystemException.unchecked(e, SysError.Parse_ERROR);
 		}
 		return str;
@@ -894,13 +974,14 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:删除多余的空格和回车
-	 
+	 * <br/>
+	 * Description:删除多余的空格和回车
+	 * 
 	 * 
 	 * @param str
 	 * @return
 	 */
-	public static String deleteTabsAndEnter(String str){
+	public static String deleteTabsAndEnter(String str) {
 		String s = null;
 
 		Pattern p = Pattern.compile("\\s*|\t|\r|\n");
@@ -916,33 +997,36 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:Map 排序
-	 
+	 * <br/>
+	 * Description:Map 排序
+	 * 
 	 * 
 	 * @param map
 	 * @return
 	 */
-	@SuppressWarnings({"rawtypes","unchecked","unused"})
-	public static LinkedHashMap<String,Integer> sortMap(Map<String,Integer> map){
+	@SuppressWarnings({ "rawtypes", "unchecked", "unused" })
+	public static LinkedHashMap<String, Integer> sortMap(
+			Map<String, Integer> map) {
 
-		LinkedHashMap<String,Integer> tmp = new LinkedHashMap<String,Integer>();
+		LinkedHashMap<String, Integer> tmp = new LinkedHashMap<String, Integer>();
 
-		Map<String,Integer> treeMap = new TreeMap<String,Integer>(map);
+		Map<String, Integer> treeMap = new TreeMap<String, Integer>(map);
 
 		List arrayList = new ArrayList(map.entrySet());
-		Collections.sort(arrayList,new Comparator(){
-			public int compare(Object o1,Object o2){
+		Collections.sort(arrayList, new Comparator() {
+			public int compare(Object o1, Object o2) {
 				Map.Entry obj1 = (Map.Entry) o1;
 				Map.Entry obj2 = (Map.Entry) o2;
-				return ((Integer) obj2.getValue()).compareTo((Integer) obj1.getValue());
+				return ((Integer) obj2.getValue()).compareTo((Integer) obj1
+						.getValue());
 			}
 		});
 
 		int v = arrayList.size();
 
-		for(int i = 0;i < v;i ++ ){
+		for (int i = 0; i < v; i++) {
 			String strs[] = arrayList.get(i).toString().split("=");
-			tmp.put(strs[0],Integer.parseInt(strs[1]));
+			tmp.put(strs[0], Integer.parseInt(strs[1]));
 		}
 
 		return tmp;
@@ -950,28 +1034,30 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:返回当前项目编译路径
-	 
+	 * <br/>
+	 * Description:返回当前项目编译路径
+	 * 
 	 * 
 	 * @return
 	 */
-	public String getProjectClassesPath(){
+	public String getProjectClassesPath() {
 		return this.getClass().getResource("/").getPath();
 	}
 
 	/**
 	 * 
-	 * <br/>Description:返回当前项目编译路径
+	 * <br/>
+	 * Description:返回当前项目编译路径
 	 * 
 	 * @author Eric
 	 * @return
 	 */
-	public static String getClassesPath(){
+	public static String getClassesPath() {
 		MvcPageUtil utils = new MvcPageUtil();
 		String str = null;
-		try{
+		try {
 			str = urlDecoder(utils.getProjectClassesPath());
-		}catch(Exception e){
+		} catch (Exception e) {
 			throw SystemException.unchecked(e, SysError.FOUNDNOPATH_ERROR);
 		}
 		return str;
@@ -979,27 +1065,31 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:读取Properties文件
+	 * <br/>
+	 * Description:读取Properties文件
 	 * 
 	 * @author Eric
-	 * @param path Properties文件路径
-	 * @param key key值
+	 * @param path
+	 *            Properties文件路径
+	 * @param key
+	 *            key值
 	 * @return
 	 */
-	public static String getProperties(String path,String key){
+	public static String getProperties(String path, String key) {
 		java.util.Properties properties = null;
 		String str = null;
-		try{
-			if(isEmptyFile(path)){
+		try {
+			if (isEmptyFile(path)) {
 				properties = new java.util.Properties();
-				java.io.FileInputStream fileStream = new java.io.FileInputStream(path);
+				java.io.FileInputStream fileStream = new java.io.FileInputStream(
+						path);
 				properties.load(fileStream);
 				fileStream.close();
 				str = properties.getProperty(key);
-			}else{
+			} else {
 				System.out.println("Properties文件不存在。");
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			throw SystemException.unchecked(e, SysError.FOUNDNOPATH_ERROR);
 		}
 
@@ -1008,27 +1098,29 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:读取Src下的属性文件
-	 
+	 * <br/>
+	 * Description:读取Src下的属性文件
+	 * 
 	 * 
 	 * @param filePath
 	 * @param key
 	 * @return
 	 */
-	public static String getSrcProperties(String filePath,String key){
+	public static String getSrcProperties(String filePath, String key) {
 		java.util.Properties properties = null;
 		String str = null;
-		try{
-			if(isEmptyFile(getClassesPath() + filePath)){
+		try {
+			if (isEmptyFile(getClassesPath() + filePath)) {
 				properties = new java.util.Properties();
-				java.io.FileInputStream fileStream = new java.io.FileInputStream(getClassesPath() + filePath);
+				java.io.FileInputStream fileStream = new java.io.FileInputStream(
+						getClassesPath() + filePath);
 				properties.load(fileStream);
 				fileStream.close();
 				str = properties.getProperty(key);
-			}else{
+			} else {
 				System.out.println("Properties文件不存在。");
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			throw SystemException.unchecked(e, SysError.FOUNDNOPATH_ERROR);
 		}
 
@@ -1037,15 +1129,16 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:判断请求是否为Ajax请求
-	 
+	 * <br/>
+	 * Description:判断请求是否为Ajax请求
+	 * 
 	 * 
 	 * @return
 	 */
-	public static boolean isAjaxRequest(HttpServletRequest req){
+	public static boolean isAjaxRequest(HttpServletRequest req) {
 		boolean boo = false;
 		String header = req.getHeader("X-Requested-With");
-		if(header != null && "XMLHttpRequest".equals(header)){
+		if (header != null && "XMLHttpRequest".equals(header)) {
 			boo = true;
 		}
 		return boo;
@@ -1053,8 +1146,9 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:返射工具类
-	 
+	 * <br/>
+	 * Description:返射工具类
+	 * 
 	 * 
 	 * @param clazz
 	 * @param methodName
@@ -1062,9 +1156,10 @@ public class MvcPageUtil{
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Object reflectionTools(Class<T> clazz,String methodName,Object[] params){
+	public static <T> Object reflectionTools(Class<T> clazz, String methodName,
+			Object[] params) {
 		Object o = null;
-		try{
+		try {
 			Object obj = clazz.newInstance();
 
 			int inputArgsLength = params.length;
@@ -1073,16 +1168,16 @@ public class MvcPageUtil{
 
 			Object[] inMethodArgs = new Object[inputArgsLength];
 
-			for(int i = 0;i < params.length;i ++ ){
+			for (int i = 0; i < params.length; i++) {
 				Object object = params[i];
 				inClassArgs[i] = (Class<T>) object.getClass();
 				inMethodArgs[i] = params[i];
 			}
 
-			Method method = obj.getClass().getMethod(methodName,inClassArgs);
+			Method method = obj.getClass().getMethod(methodName, inClassArgs);
 
-			o = method.invoke(obj,inMethodArgs);
-		}catch(Exception e){
+			o = method.invoke(obj, inMethodArgs);
+		} catch (Exception e) {
 			throw SystemException.unchecked(e, SysError.REFLECT_ERROR);
 		}
 
@@ -1091,32 +1186,36 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:返回一个ClassLoader
-	 
+	 * <br/>
+	 * Description:返回一个ClassLoader
+	 * 
 	 * 
 	 * @return
 	 */
-	public static ClassLoader getClassLoader(){
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+	public static ClassLoader getClassLoader() {
+		ClassLoader classLoader = Thread.currentThread()
+				.getContextClassLoader();
 		return classLoader;
 	}
 
 	/**
 	 * 
-	 * <br/>Description:根据classLoader和类名称返回一个类
-	 
+	 * <br/>
+	 * Description:根据classLoader和类名称返回一个类
+	 * 
 	 * 
 	 * @param classLoader
 	 * @param className
 	 * @return
 	 */
-	public static Class<?> getClassByClassLoader(ClassLoader classLoader,String className){
+	public static Class<?> getClassByClassLoader(ClassLoader classLoader,
+			String className) {
 		Class<?> clazz = null;
-		try{
-			if(null != className && null != classLoader){
+		try {
+			if (null != className && null != classLoader) {
 				clazz = classLoader.loadClass(className);
 			}
-		}catch(ClassNotFoundException e){
+		} catch (ClassNotFoundException e) {
 			throw SystemException.unchecked(e, SysError.ClassNotFound_ERROR);
 		}
 		return clazz;
@@ -1124,20 +1223,21 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:根据classForName和类名称返回一个类
-	 
+	 * <br/>
+	 * Description:根据classForName和类名称返回一个类
+	 * 
 	 * 
 	 * @param classLoader
 	 * @param className
 	 * @return
 	 */
-	public static Class<?> getClassByClassForName(String className){
+	public static Class<?> getClassByClassForName(String className) {
 		Class<?> clazz = null;
-		try{
-			if(null != className){
+		try {
+			if (null != className) {
 				clazz = Class.forName(className);
 			}
-		}catch(ClassNotFoundException e){
+		} catch (ClassNotFoundException e) {
 			throw SystemException.unchecked(e, SysError.ClassNotFound_ERROR);
 		}
 		return clazz;
@@ -1145,51 +1245,54 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:删除字符串两端的大括号
-	 
+	 * <br/>
+	 * Description:删除字符串两端的大括号
+	 * 
 	 * 
 	 * @param val
 	 * @return
 	 */
-	public static String deleteBigBrackets(String val){
+	public static String deleteBigBrackets(String val) {
 		String v = val;
-		String begin = v.substring(0,1);
-		String end = v.substring(v.length() - 1,v.length());
-		if(begin.equalsIgnoreCase("{") && end.equalsIgnoreCase("}")){
-			v = v.substring(1,v.length() - 1);
+		String begin = v.substring(0, 1);
+		String end = v.substring(v.length() - 1, v.length());
+		if (begin.equalsIgnoreCase("{") && end.equalsIgnoreCase("}")) {
+			v = v.substring(1, v.length() - 1);
 		}
 		return v;
 	}
 
 	/**
 	 * 
-	 * <br/>Description:给字符串包裹一个大括号
-	 
+	 * <br/>
+	 * Description:给字符串包裹一个大括号
+	 * 
 	 * 
 	 * @param val
 	 * @return
 	 */
-	public static String addBigBrackets(String val){
+	public static String addBigBrackets(String val) {
 
 		return "{" + val + "}";
 	}
 
 	/**
 	 * 
-	 * <br/>Description:删除字符串尾部是否包含 “/”
-	 
+	 * <br/>
+	 * Description:删除字符串尾部是否包含 “/”
+	 * 
 	 * 
 	 * @param val
 	 * @return
 	 */
-	public static String deleteRightBar(String val){
+	public static String deleteRightBar(String val) {
 		boolean boo = checkRightBar(val);
 
 		String s = val;
 
-		if(boo){
-			while(checkRightBar(s)){
-				s = s.substring(0,s.length() - 1);
+		if (boo) {
+			while (checkRightBar(s)) {
+				s = s.substring(0, s.length() - 1);
 			}
 		}
 		return s;
@@ -1197,18 +1300,19 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:判断字符串尾部是否包含 “/”
-	 
+	 * <br/>
+	 * Description:判断字符串尾部是否包含 “/”
+	 * 
 	 * 
 	 * @param val
 	 * @return
 	 */
-	public static boolean checkRightBar(String val){
+	public static boolean checkRightBar(String val) {
 		boolean boo = false;
-		if(val.length() > 1){
-			String s = val.substring(val.length() - 1,val.length());
+		if (val.length() > 1) {
+			String s = val.substring(val.length() - 1, val.length());
 
-			if("/".equalsIgnoreCase(s)){
+			if ("/".equalsIgnoreCase(s)) {
 				boo = true;
 			}
 		}
@@ -1218,50 +1322,53 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:根据传入的类型返回对应数据的类型--反射工具专用
-	 
+	 * <br/>
+	 * Description:根据传入的类型返回对应数据的类型--反射工具专用
+	 * 
 	 * 
 	 * @param pmType
 	 * @param val
 	 * @return
 	 * @throws ConversionTypeException
 	 */
-	public static Object createObjectByParamType(String pmType,String val) throws SystemException{
+	public static Object createObjectByParamType(String pmType, String val)
+			throws SystemException {
 
 		Object obj = null;
 
-		try{
-			if(pmType.equals("java.lang.String")){
+		try {
+			if (pmType.equals("java.lang.String")) {
 				obj = String.valueOf(val);
-			}else if(pmType.equals("java.util.Date")){
+			} else if (pmType.equals("java.util.Date")) {
 				obj = String.valueOf(MvcPageUtil.conversionDateReturnDate(val));
-			}else if(pmType.equals("java.lang.Boolean")){
+			} else if (pmType.equals("java.lang.Boolean")) {
 				obj = new Boolean(val);
-			}else if(pmType.equals("boolean")){
+			} else if (pmType.equals("boolean")) {
 				obj = new Boolean(val);
-			}else if(pmType.equals("java.lang.Integer")){
+			} else if (pmType.equals("java.lang.Integer")) {
 				obj = Integer.parseInt(val);
-			}else if(pmType.equals("int")){
+			} else if (pmType.equals("int")) {
 				obj = Integer.parseInt(val);
-			}else if(pmType.equals("java.lang.Long")){
+			} else if (pmType.equals("java.lang.Long")) {
 				obj = Long.parseLong(val);
-			}else if(pmType.equals("java.lang.Double")){
+			} else if (pmType.equals("java.lang.Double")) {
 				obj = Double.parseDouble(val);
-			}else if(pmType.equals("java.lang.Byte")){
+			} else if (pmType.equals("java.lang.Byte")) {
 				obj = Byte.parseByte(val);
-			}else if(pmType.equals("java.lang.Short")){
+			} else if (pmType.equals("java.lang.Short")) {
 				obj = Short.parseShort(val);
-			}else if(pmType.equals("java.lang.Float")){
+			} else if (pmType.equals("java.lang.Float")) {
 				obj = Float.parseFloat(val);
-			}else if(pmType.equals("java.math.BigDecimal")){
+			} else if (pmType.equals("java.math.BigDecimal")) {
 				obj = new BigDecimal(val);
-			}else if(pmType.equals("java.math.BigInteger")){
+			} else if (pmType.equals("java.math.BigInteger")) {
 				obj = new BigInteger(val);
-			}else if(pmType.equals("java.io.File")){
+			} else if (pmType.equals("java.io.File")) {
 				obj = new File(val);
 			}
-		}catch(Exception e){
-			throw SystemException.unchecked(e, ConversionError.Conversion_ERROR);
+		} catch (Exception e) {
+			throw SystemException
+					.unchecked(e, ConversionError.Conversion_ERROR);
 		}
 
 		return obj;
@@ -1269,51 +1376,64 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:根据转入类型返回对应的类型名称
-	 
+	 * <br/>
+	 * Description:根据转入类型返回对应的类型名称
+	 * 
 	 * 
 	 * @param pmType
 	 * @return
 	 */
-	public static String getTypeNameByParamType(String pmType){
+	public static String getTypeNameByParamType(String pmType) {
 
 		String str = null;
 
-		if(pmType.equals("class java.lang.String")){
+		if (pmType.equals("class java.lang.String")) {
 			str = "string";
-		}else if(pmType.equals("class java.util.Date")){
+		} else if (pmType.equals("class java.util.Date")) {
 			str = "date";
-		}else if(pmType.equals("class java.lang.Boolean")){
+		} else if (pmType.equals("class java.lang.Boolean")) {
 			str = "boolean";
-		}else if(pmType.equals("boolean")){
+		} else if (pmType.equals("boolean")) {
 			str = "boolean";
-		}else if(pmType.equals("class java.lang.Integer")){
+		} else if (pmType.equals("class java.lang.Integer")) {
 			str = "integer";
-		}else if(pmType.equals("int")){
+		} else if (pmType.equals("int")) {
 			str = "int";
-		}else if(pmType.equals("class java.lang.Long")){
+		} else if (pmType.equals("class java.lang.Long")) {
 			str = "long";
-		}else if(pmType.equals("class java.lang.Double")){
+		} else if (pmType.equals("class java.lang.Double")) {
 			str = "double";
-		}else if(pmType.equals("class java.lang.Byte")){
+		} else if (pmType.equals("class java.lang.Byte")) {
 			str = "byte";
-		}else if(pmType.equals("class java.lang.Short")){
+		} else if (pmType.equals("class java.lang.Short")) {
 			str = "short";
-		}else if(pmType.equals("class java.lang.Float")){
+		} else if (pmType.equals("class java.lang.Float")) {
 			str = "float";
-		}else if(pmType.equals("class java.math.BigDecimal")){
+		} else if (pmType.equals("class java.math.BigDecimal")) {
 			str = "bigDecimal";
-		}else if(pmType.equals("class java.math.BigInteger")){
+		} else if (pmType.equals("class java.math.BigInteger")) {
 			str = "bigInteger";
-		}else if(pmType.equals("class java.io.File")){
+		} else if (pmType.equals("class java.io.File")) {
 			str = "file";
-		}else if(pmType.equals("interface java.util.Map") || pmType.equals("class java.util.TreeMap") || pmType.equals("class java.util.HashMap") || pmType.equals("class java.util.EnumMap") || pmType.equals("class java.util.LinkHashMap")){
+		} else if (pmType.equals("interface java.util.Map")
+				|| pmType.equals("class java.util.TreeMap")
+				|| pmType.equals("class java.util.HashMap")
+				|| pmType.equals("class java.util.EnumMap")
+				|| pmType.equals("class java.util.LinkHashMap")) {
 			str = "map";
-		}else if(pmType.equals("interface java.util.List") || pmType.equals("class java.util.ArrayList") || pmType.equals("class java.util.LinkedList")){
+		} else if (pmType.equals("interface java.util.List")
+				|| pmType.equals("class java.util.ArrayList")
+				|| pmType.equals("class java.util.LinkedList")) {
 			str = "list";
-		}else if(pmType.equals("interface java.util.Set") || pmType.equals("class java.util.TreeSet") || pmType.equals("class java.util.HashSet") || pmType.equals("class java.util.BitSet") || pmType.equals("class java.util.EnumSet") || pmType.equals("class java.util.LinkedHashSet") || pmType.equals("class java.util.TreeSet")){
+		} else if (pmType.equals("interface java.util.Set")
+				|| pmType.equals("class java.util.TreeSet")
+				|| pmType.equals("class java.util.HashSet")
+				|| pmType.equals("class java.util.BitSet")
+				|| pmType.equals("class java.util.EnumSet")
+				|| pmType.equals("class java.util.LinkedHashSet")
+				|| pmType.equals("class java.util.TreeSet")) {
 			str = "set";
-		}else if(pmType.equals("java.util.Vector")){
+		} else if (pmType.equals("java.util.Vector")) {
 			str = "vector";
 		}
 
@@ -1322,18 +1442,19 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:将传入字符串进行首字母小写
-	 
+	 * <br/>
+	 * Description:将传入字符串进行首字母小写
+	 * 
 	 * 
 	 * @param val
 	 * @return
 	 */
-	public static String lowercaseFirstLetter(String val){
+	public static String lowercaseFirstLetter(String val) {
 		String v = val;
 
-		if(null != val && ! "".equals(val.trim())){
-			String cb = val.substring(0,1);
-			String ce = val.substring(1,val.length());
+		if (null != val && !"".equals(val.trim())) {
+			String cb = val.substring(0, 1);
+			String ce = val.substring(1, val.length());
 			v = cb.toLowerCase() + ce;
 		}
 
@@ -1342,18 +1463,19 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:将传入字符串进行首字母大写
-	 
+	 * <br/>
+	 * Description:将传入字符串进行首字母大写
+	 * 
 	 * 
 	 * @param val
 	 * @return
 	 */
-	public static String upperCaseFirstLetter(String val){
+	public static String upperCaseFirstLetter(String val) {
 		String v = val;
 
-		if(null != val && ! "".equals(val.trim())){
-			String cb = val.substring(0,1);
-			String ce = val.substring(1,val.length());
+		if (null != val && !"".equals(val.trim())) {
+			String cb = val.substring(0, 1);
+			String ce = val.substring(1, val.length());
 			v = cb.toUpperCase() + ce;
 		}
 
@@ -1362,41 +1484,42 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:读取 ServletInputStream
-	 
+	 * <br/>
+	 * Description:读取 ServletInputStream
+	 * 
 	 * 
 	 * @param request
 	 * @param charset
 	 * @return
 	 * @throws IOException
 	 */
-	public static String getServletInputStream(InputStreamReader in){
+	public static String getServletInputStream(InputStreamReader in) {
 
 		int BUFFER_SIZE = 4096;
 
 		StringWriter out = new StringWriter();
 
-		try{
+		try {
 			// int byteCount = 0;
 			char[] buffer = new char[BUFFER_SIZE];
-			int bytesRead = - 1;
-			while((bytesRead = in.read(buffer)) != - 1){
-				out.write(buffer,0,bytesRead);
+			int bytesRead = -1;
+			while ((bytesRead = in.read(buffer)) != -1) {
+				out.write(buffer, 0, bytesRead);
 				// byteCount += bytesRead;
 			}
 			out.flush();
-		}catch(IOException e){
+		} catch (IOException e) {
 			throw SystemException.unchecked(e, IOEError.IOE_ERROR);
-		}finally{
-			try{
+		} finally {
+			try {
 				in.close();
-			}catch(IOException ex){
+			} catch (IOException ex) {
 				throw SystemException.unchecked(ex, IOEError.IOE_ERROR);
 
 			}
-			try{
+			try {
 				out.close();
-			}catch(IOException ex){
+			} catch (IOException ex) {
 				throw SystemException.unchecked(ex, IOEError.IOE_ERROR);
 
 			}
@@ -1407,38 +1530,41 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:根据URl地址和Key返回对应值
-	 
+	 * <br/>
+	 * Description:根据URl地址和Key返回对应值
+	 * 
 	 * 
 	 * @param val
 	 * @param key
 	 * @return
 	 */
-	public static Map<String,String> getUrlParamByKey(String val){
-		Map<String,String> map = null;
-		if(null != val && ! "".equalsIgnoreCase(val)){
-			map = new HashMap<String,String>();
+	public static Map<String, String> getUrlParamByKey(String val) {
+		Map<String, String> map = null;
+		if (null != val && !"".equalsIgnoreCase(val)) {
+			map = new HashMap<String, String>();
 
 			String[] maps = val.split("&");
 
-			if(maps.length != 0){
-				for(String m:maps){
+			if (maps.length != 0) {
+				for (String m : maps) {
 					String[] km = m.split("=");
-					map.put(km[0],km[1]);
+					map.put(km[0], km[1]);
 				}
-			}else{
+			} else {
 				String[] km = val.split("=");
-				map.put(km[0],km[1]);
+				map.put(km[0], km[1]);
 			}
 		}
 
 		return map;
 	}
 
-	public static boolean isMultipartRequest(HttpServletRequest request){
+	public static boolean isMultipartRequest(HttpServletRequest request) {
 
 		boolean boo = false;
-		if(request.getContentType()==null ||request.getContentType().equals("null")||request.getContentType().equals("")){
+		if (request.getContentType() == null
+				|| request.getContentType().equals("null")
+				|| request.getContentType().equals("")) {
 			return boo;
 		}
 		String[] cts = request.getContentType().split(";");
@@ -1447,7 +1573,7 @@ public class MvcPageUtil{
 
 		int ct = contentType.toLowerCase().indexOf("multipart/".toLowerCase());
 
-		if(ct != - 1){
+		if (ct != -1) {
 			boo = true;
 		}
 
@@ -1456,8 +1582,9 @@ public class MvcPageUtil{
 
 	/**
 	 * 
-	 * <br/>Description:获取文件上传信息
-	 
+	 * <br/>
+	 * Description:获取文件上传信息
+	 * 
 	 * 
 	 * @param request
 	 * @param charset
@@ -1465,11 +1592,9 @@ public class MvcPageUtil{
 	 * @throws UploadFileException
 	 * @throws UnknownException
 	 */
-	public static Map<String,String> getMultipartParams(HttpServletRequest request,String charset) throws SystemException{
+	public static Map<String, String> getMultipartParams(
+			HttpServletRequest request, String charset) throws SystemException {
 		return UploadFileUtil.getMultipartParams(request, charset);
 	}
-
-
-	
 
 }

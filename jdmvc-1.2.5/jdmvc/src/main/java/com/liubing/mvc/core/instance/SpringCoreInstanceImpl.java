@@ -7,7 +7,7 @@ import com.liubing.mvc.core.util.SpringContextUtil;
 
 /**
  * @author liubing1
- *
+ * 
  */
 public class SpringCoreInstanceImpl implements ICoreInstance {
 
@@ -20,7 +20,5 @@ public class SpringCoreInstanceImpl implements ICoreInstance {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	
 
 }

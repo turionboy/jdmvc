@@ -6,17 +6,18 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
 /**
  * form 表单
+ * 
  * @author liubingsmile@gmail.com
- *
+ * 
  */
-@Target({ElementType.PARAMETER})
+@Target({ ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-public @interface FormParam{
+public @interface FormParam {
 	public String value();
-	
-	
+
 }

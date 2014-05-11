@@ -5,7 +5,7 @@ package com.liubing.mvc.core.instance;
 
 /**
  * @author liubing1
- *
+ * 
  */
 public interface ICoreInstance {
 	/**
@@ -15,6 +15,7 @@ public interface ICoreInstance {
 	 * @throws Exception
 	 */
 	public Object returnclass(String classname) throws Exception;
+
 	/**
 	 * 
 	 * @param cls
